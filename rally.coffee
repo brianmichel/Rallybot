@@ -1,5 +1,7 @@
 # Rally information for bugs, stories, and users
 #
+# rally me <defect id | task id> - Lookup a task or defect from Rally
+#
 # ENV Variables Required:
 # HUBOT_RALLY_USERNAME : username that hubot will use to login to Rally
 # HUBOT_RALLY_PASSWORD : password that hubot will use to login to Rally
@@ -7,8 +9,6 @@
 # Add to heroku:
 # % heroku config:add HUBOT_RALLY_USERNAME="..."
 # % heroku config:add HUBOT_RALLY_PASSWORD="..."
-#
-# rally me <defect id | task id>
 #
 
 user = process.env.HUBOT_RALLY_USERNAME
