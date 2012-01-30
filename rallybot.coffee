@@ -35,9 +35,15 @@ module.exports = (robot) ->
 bugRequest = (msg, defectId, cb) ->
 	query_string = '/defect.js?query=(FormattedId%20=%20'+defectId+')' + '&fetch=true'
 	rallyRequest msg, query_string, (json) ->
-		console.log(json)
-		return_string = "Owner: " + json.QueryResult.Results[0].Owner._refObjectName + "\n" + "Desc: " + json.QueryResult.Results[0].Description;
-		cb return_string || "Aww snap, I couldn't find that bug!" 
+		return_array = [
+			"#{json.QueryResult.Results[0].FormattedID} - #{json.QueryResult.Results[0]._refObjectName}"
+			"Owner - #{json.QueryResult.Results[0].Owner._refObjectName}"
+			"Project - #{json.QueryResult.Results[0].Project._refObjectName}"
+			"Severity - #{json.QueryResult.Results[0].Severity}"
+			"State - #{json.QueryResult.Results[0].State}"
+			"#{json.QueryResult.Results[0].Description}"
+			]
+		cb return_array.join("\n") || "Aww snap, I couldn't find that bug!" 
 
 taskRequest = (msg, taskId, cb) ->
 	query_string = '/task.js?query=(FormattedId%20=%20'+taskId+')' + '&fetch=true'
