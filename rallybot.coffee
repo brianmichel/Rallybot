@@ -48,8 +48,14 @@ bugRequest = (msg, defectId, cb) ->
 taskRequest = (msg, taskId, cb) ->
 	query_string = '/task.js?query=(FormattedId%20=%20'+taskId+')' + '&fetch=true'
 	rallyRequest msg, query_string, (json) ->
-		return_string = "Owner: " + json.QueryResult.Results[0].Owner._refObjectName + "\n" + "Desc: " + json.QueryResult.Results[0].Name;
-		cb return_string || "Aww snap, I couldn't find that task!"
+		return_array = [
+			"#{json.QueryResult.Results[0].FormattedID} - #{json.QueryResult.Results[0].Name}"
+			"Owner - #{json.QueryResult.Results[0].Owner._refObjectName}"
+			"Project - #{json.QueryResult.Results[0].Project._refObjectName}"
+			"State - #{json.QueryResult.Results[0].State}"
+			"Feature - #{json.QueryResult.Results[0].WorkProduct._refObjectName}"
+			]
+		cb return_array.join("\n") || "Aww snap, I couldn't find that task!"
 
 rallyRequest = (msg, query, cb) ->
 	rally_url = 'https://rally1.rallydev.com/slm/webservice/' + api_version + query
