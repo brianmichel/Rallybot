@@ -3,7 +3,7 @@ Rally connector for Hubot
 
 This script was designed to get useful information from Rally at a moments notice. When someone says, "Hey what's going on with DE192810181081?" Instead of lying, because your mind doesn't work in defect numbers, you can use this to jog you brain as to what is __ACTUALLY__ happening with that defect or task.
 
-It helps you, it's helps them, it makes people happy, and saves babies.
+It helps you, it's helps them, it makes people happy, and saves kitties.
 
 Requirements
 ------------
