@@ -7,6 +7,7 @@ It helps you, it's helps them, it makes people happy, and saves kitties.
 Requirements
 ------------
  1. Hubot up and running (I think that's it.)
+ 2. Lynx should be installed and PATH accessible for pretty printed descriptions (brew install lynx)
 
 Setup
 -----

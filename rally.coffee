@@ -10,6 +10,7 @@
 # % heroku config:add HUBOT_RALLY_USERNAME="..."
 # % heroku config:add HUBOT_RALLY_PASSWORD="..."
 #
+exec = require('child_process').exec
 
 user = process.env.HUBOT_RALLY_USERNAME
 pass = process.env.HUBOT_RALLY_PASSWORD
@@ -34,15 +35,19 @@ bugRequest = (msg, defectId, cb) ->
 	rallyRequest msg, query_string, (json) ->
 		if json && json.QueryResult.TotalResultCount > 0
 			getLinkToItem msg, json.QueryResult.Results[0], "defect"
-			return_array = [
-				"#{json.QueryResult.Results[0].FormattedID} - #{json.QueryResult.Results[0]._refObjectName}"
-				"Owner - #{ if json.QueryResult.Results[0].Owner then json.QueryResult.Results[0].Owner._refObjectName else "No Owner" }"
-				"Project - #{ if json.QueryResult.Results[0].Project then json.QueryResult.Results[0].Project._refObjectName else "No Project" }"
-				"Severity - #{json.QueryResult.Results[0].Severity}"
-				"State - #{json.QueryResult.Results[0].State}"
-				"#{if json.QueryResult.Results[0].Description then json.QueryResult.Results[0].Description else "No Description"}"
-				]
-			cb return_array.join("\n")
+			description = "No Description"
+			if json.QueryResult.Results[0].Description
+				prettifyDescription json.QueryResult.Results[0].Description, (output) ->
+					description = output
+					return_array = [
+						"#{json.QueryResult.Results[0].FormattedID} - #{json.QueryResult.Results[0]._refObjectName}"
+						"Owner - #{ if json.QueryResult.Results[0].Owner then json.QueryResult.Results[0].Owner._refObjectName else "No Owner" }"
+						"Project - #{ if json.QueryResult.Results[0].Project then json.QueryResult.Results[0].Project._refObjectName else "No Project" }"
+						"Severity - #{json.QueryResult.Results[0].Severity}"
+						"State - #{json.QueryResult.Results[0].State}"
+						"#{description}"
+						]
+					cb return_array.join("\n")
 		else
 			cb "Aww snap, I couldn't find that bug!"
 
@@ -67,14 +72,17 @@ storyRequest = (msg, storyId, cb) ->
 	rallyRequest msg, query_string, (json) ->
 		if json && json.QueryResult.TotalResultCount > 0
 			getLinkToItem msg, json.QueryResult.Results[0], "userstory"
-			return_array = [
-				"#{json.QueryResult.Results[0].FormattedID} - #{json.QueryResult.Results[0].Name}"
-				"Owner - #{ if json.QueryResult.Results[0].Owner then json.QueryResult.Results[0].Owner._refObjectName else "No Owner" }"
-				"Project - #{ if json.QueryResult.Results[0].Project then json.QueryResult.Results[0].Project._refObjectName else "No Project" }"
-				"ScheduleState - #{json.QueryResult.Results[0].ScheduleState}"
-				"#{if json.QueryResult.Results[0].Description then json.QueryResult.Results[0].Description else "No Description"}"
-				]
-			cb return_array.join("\n")
+			description = "No Description"
+			prettifyDescription json.QueryResult.Results[0].Description, (output) ->
+				description = output || description
+				return_array = [
+					"#{json.QueryResult.Results[0].FormattedID} - #{json.QueryResult.Results[0].Name}"
+					"Owner - #{ if json.QueryResult.Results[0].Owner then json.QueryResult.Results[0].Owner._refObjectName else "No Owner" }"
+					"Project - #{ if json.QueryResult.Results[0].Project then json.QueryResult.Results[0].Project._refObjectName else "No Project" }"
+					"ScheduleState - #{json.QueryResult.Results[0].ScheduleState}"
+					"#{description}"
+					]
+				cb return_array.join("\n")
 		else
 			cb "Aww snap, I couldn't find that story!"
 
@@ -89,7 +97,6 @@ basicAuthRequest = (msg, url, cb) ->
 		.headers(Authorization: auth, Accept: 'application/json')
 		.get() (err, res, body) ->
 			json_body = null
-			console.log body
 			switch res.statusCode
 				when 200 then json_body = JSON.parse(body)
 				else json_body = null
@@ -105,4 +112,7 @@ getLinkToItem = (msg, object, type) ->
 		msg.send "https://rally1.rallydev.com/slm/rally.sp#/#{projectId}/detail/#{type}/#{objectId}"
 	else
 		#do nothing
+prettifyDescription = (html_description, cb) ->
+	child = exec "echo \"#{html_description}\" | lynx -dump -stdin", (error, stdout, stderr) ->
+		cb stdout
 		
