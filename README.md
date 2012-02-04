@@ -1,4 +1,4 @@
-Rally connector for Hubot
+Rally Hubot Script
 ===========================
 This script was designed to get useful information from Rally at a moments notice. When someone says, "Hey what's going on with DE192810181081?" Instead of lying, because your mind doesn't work in defect numbers, you can use this to jog you brain as to what is __ACTUALLY__ happening with that defect or task.
 
@@ -20,7 +20,11 @@ or
 
 	<Your Hubot name> rally me TA91881801
 
- So right now it only does Defects and Tasks, but I'll try to extend it and get some interesting things going, like open bug counts per person per project, etc. Maybe even some sweet ass graphs, who knows. 
+or
+
+	<Your Hubot name> rally me US9181801
+
+ So right now it only does the basic elements (defects, tasks, stories), but I'll try to extend it and get some interesting things going, like open bug counts per person per project, etc. Maybe even some sweet ass graphs, who knows. 
 
 Additions
 ---------
