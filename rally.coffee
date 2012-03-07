@@ -114,5 +114,8 @@ getLinkToItem = (msg, object, type) ->
 		#do nothing
 prettifyDescription = (html_description, cb) ->
 	child = exec "echo \"#{html_description}\" | lynx -dump -stdin", (error, stdout, stderr) ->
-		cb stdout
+		return_text = html_description
+		if !error
+		  return_text = stdout
+		cb return_text
 		
