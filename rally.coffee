@@ -10,6 +10,11 @@
 # % heroku config:add HUBOT_RALLY_USERNAME="..."
 # % heroku config:add HUBOT_RALLY_PASSWORD="..."
 #
+# PRETTY PRINTING SUPPORT
+#  Since Rally supports rich text for description fields, it will come back as HTML
+# to pretty print this we can run it through lynx. Make sure you have lynx installed
+# and PATH accessible, otherwise we will degrade to just showing the html description.
+#
 exec = require('child_process').exec
 
 user = process.env.HUBOT_RALLY_USERNAME
